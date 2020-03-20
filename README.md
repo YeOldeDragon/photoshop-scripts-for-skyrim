@@ -11,7 +11,7 @@ It also skips files with theses values in names: `"_n", "_g", "_em", "_m"`.
 You can change these values in `folder_parser.jsx` script.  
   
 File categories are: `plant, grass, tree, LOD, cloth, impactdecal, rock and other`.  
-You can change what are done to each file group in `batch_skyrim_textures_editor.jsx` script.
+You can change Photoshop actions that are applied on files in `batch_skyrim_textures_editor.jsx` script.
   
 I've uploaded these scripts here to give an example on how you can batch-edit .dds files using Photoshop and the Intel-Texture-Works-Plugin (.dds plugin for Photoshop).  
 I've also uploaded a [Intel-Texture-Works-Plugin version](https://github.com/YeOldeDragon/Intel-Texture-Works-Plugin) that automatically uses my default file options when opening and saving .dds files.
