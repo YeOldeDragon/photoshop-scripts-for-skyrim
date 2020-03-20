@@ -1,4 +1,4 @@
-# photoshop-scripts-for-skyrim
+# Photoshop scripts for Skyrim textures editing
 Photoshop batch scripts for Skyrim .dds texture editing. 
 
 ## Description
