@@ -1,4 +1,5 @@
-﻿/* --------------------------------------------------------------------------------
+/*
+--------------------------------------------------------------------------------
 MIT License
 
 Copyright (c) 2020 YeOldeDragon
@@ -21,14 +22,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -------------------------------------------------------------------------------- */
-
-
 #target photoshop
-#include "batch_skyrim_textures_editor.jsx"
 
 
-// Get the folder to process
-var folderUri = Folder.selectDialog( "Select Skyrim Textures folder to edit." );
+function RockEditor(effectsObj, actionsObj)
+{
+    var _effects = effectsObj;
+    var _actions = actionsObj;
 
-var executer = new BatchSkyrimTexturesEditor();
-executer.ApplyEffectsOnFiles(folderUri, "D:/Sandbox/photoshop-scripts-for-skyrim/data/");
+    // Actions we want to do before applying effects (ex.: resize)
+    this.PreWork = function(doc)
+    {
+        _actions.ResizeIfBiggerThan(doc, 2048);
+    }
+
+
+    // Actions / effects we want to apply to this image type
+    this.ApplyEffect = function(doc)
+    {
+        if((doc.width >= 1024 && doc.height > 256) ||
+           (doc.height >= 1024 && doc.width > 256))
+        {
+            _effects.ApplyStrongOilPaint(4);
+        }
+        else
+        {
+            _effects.ApplyLightOilPaint(4);
+        }
+    }
+
+    
+    // Actions we want to do before applying effects (ex.: resize)
+    this.PostWork = function(doc)
+    {
+        _actions.ResizeIfBiggerThan(doc, 1024);
+    }
+}

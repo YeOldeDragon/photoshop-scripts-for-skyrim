@@ -70,4 +70,35 @@ function Effects()
         // execute...
         executeAction(stringIDToTypeID("oilPaint"), desc, DialogModes.NO);
     }
+
+
+    // Public method to apply a 200 x 200 offset to image
+    this.ApplyDefaultOffset = function()
+    {
+        ApplyOffset(200, 200);
+    }
+
+
+    // Public method to apply a -200 x -200 offset to image.
+    this.RevertDefaultOffset = function()
+    {
+        ApplyOffset(-200, -200);
+    }
+
+
+    function ApplyOffset(offsetHrzn, offsetVrtc)
+    {
+        // =======================================================
+        var idOfst = charIDToTypeID( "Ofst" );
+        var desc118 = new ActionDescriptor();
+        var idHrzn = charIDToTypeID( "Hrzn" );
+        desc118.putInteger( idHrzn, offsetHrzn );
+        var idVrtc = charIDToTypeID( "Vrtc" );
+        desc118.putInteger( idVrtc, offsetVrtc );
+        var idFl = charIDToTypeID( "Fl  " );
+        var idFlMd = charIDToTypeID( "FlMd" );
+        var idWrp = charIDToTypeID( "Wrp " );
+        desc118.putEnumerated( idFl, idFlMd, idWrp );
+        executeAction( idOfst, desc118, DialogModes.NO );
+    }
 }

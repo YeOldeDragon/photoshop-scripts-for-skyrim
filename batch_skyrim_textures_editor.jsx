@@ -22,8 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -------------------------------------------------------------------------------- */
 #target photoshop
-#include "folder_parser.jsx"
+#include "utilities.jsx"
+#include "actions.jsx"
 #include "effects.jsx"
+#include "folder_parser.jsx"
+#include "actor_editor.jsx"
+#include "actor_hd_editor.jsx"
+#include "default_editor.jsx"
+#include "metal_editor.jsx"
+#include "normal_map_editor.jsx"
+#include "plant_editor.jsx"
+#include "rock_editor.jsx"
+#include "small_rock_editor.jsx"
+#include "tree_editor.jsx"
+#include "wood_editor.jsx"
 
 
 // --------------------------------------------------------------------------------
@@ -34,176 +46,107 @@ SOFTWARE.
 // --------------------------------------------------------------------------------
 function BatchSkyrimTexturesEditor()
 {
-    var _effects = new Effects();
+    var _effects = new Effects();    
+    var _actions = new Actions();
     var _parser = new FolderParser();
 
     // --------------------------------------------------------------------------------
     // This method parse the received folder for .dds files
     // and apply the correct effect on them.
     // ------------------------------
-    this.ApplyEffectsOnFiles = function(folderUri)
+    this.ApplyEffectsOnFiles = function(folderPath, dataPath)
     {
         app.preferences.rulerUnits = Units.PIXELS; // Set the ruler units to PIXELS
         app.preferences.typeUnits = TypeUnits.POINTS;   // Set Type units to POINTS
 
-        _parser.Parse(folderUri);
+        _parser.Parse(folderPath, dataPath);
 
-        Array.ForEach(_parser.PlantFiles, EditPlant);
-        Array.ForEach(_parser.GrassFiles, EditGrass);
-        Array.ForEach(_parser.TreeFiles, EditTree);
-        Array.ForEach(_parser.LODFiles, EditOthers);
-        Array.ForEach(_parser.ClothFiles, EditOthers);
-        Array.ForEach(_parser.DecalFiles, EditOthers);
-        Array.ForEach(_parser.RockFiles, EditRock);
-        Array.ForEach(_parser.OtherFiles, EditOthers);
+        var defaultEditor = new DefaultEditor(_effects, _actions);
+
+        Edit(_parser.ActorFiles, new ActorEditor(_effects, _actions));
+        Edit(_parser.ActorHDFiles, new ActorHDEditor(_effects, _actions));
+        Edit(_parser.MetalFiles, new MetalEditor(_effects, _actions));
+        Edit(_parser.GrassFiles, new PlantEditor(_effects, _actions));
+        Edit(_parser.PlantFiles, new PlantEditor(_effects, _actions));
+        Edit(_parser.TreeFiles, new TreeEditor(_effects, _actions));
+        Edit(_parser.RockFiles, new RockEditor(_effects, _actions));
+        Edit(_parser.SmallRockFiles, new SmallRockEditor(_effects, _actions));
+        Edit(_parser.WoodFiles, new WoodEditor(_effects, _actions));
+        Edit(_parser.LODFiles, defaultEditor);
+        Edit(_parser.ClothFiles, defaultEditor);
+        Edit(_parser.DecalFiles, defaultEditor);
+        Edit(_parser.OtherFiles, defaultEditor);
+        Edit(_parser.SnowFiles, defaultEditor);
+        Edit(_parser.WeaponFiles, defaultEditor);
+
+        EditNormals(_parser.NormalFiles, new NormalMapEditor(_effects, _actions));
     }
 
-
-    // --------------------------------------------------------------------------------
-    // Apply effect on uncategorized textures
-    // ------------------------------
-    function EditOthers(fileObj)
+    function Edit(obj, editorObj)
     {
-        var doc = open(fileObj);
-        // On skip les fichiers trop petits.
-        if (doc.width < 32 && doc.height < 32) 
+        var i = 0;
+        for(i = 0; i < obj.length; i++)
         {
-            doc.close();
-            return;
-        }
+            var doc = open(obj[i]);
+            // If file is too small, we skip
+            if (doc.width >= 32 || doc.height >= 32) 
+            {
+                editorObj.PreWork(doc);
 
-        _effects.ApplyLightOilPaint(1);
-        doc.save();
-        doc.close();
-    }
+                _effects.ApplyDefaultOffset();
+                editorObj.ApplyEffect(doc);
+                _actions.SelectImageButContour(10);
+                _actions.CopySelection();
 
-    // --------------------------------------------------------------------------------
-    // Apply effect on grass textures
-    // ------------------------------
-    function EditGrass(fileObj)
-    {
-        var doc = open(fileObj);
-        // On skip les fichiers trop petits.
-        if (doc.width < 32 && doc.height < 32) 
-        {
-            doc.close();
-            return;
-        }
-        var strongness = 1;
-        
-        if(doc.height > 1024 || doc.width > 1024) {
-            strongness = 4;
-        }
+                _actions.RevertImageToDefault();
 
-        _effects.ApplyLightOilPaint(strongness);
-        doc.save();
-        doc.close();
-    }
-
-    // --------------------------------------------------------------------------------
-    // Apply effect on plant textures
-    // ------------------------------
-    function EditPlant(fileObj)
-    {
-        var doc = open(fileObj);
-        // On skip les fichiers trop petits.
-        if (doc.width < 32 && doc.height < 32) 
-        {
-            doc.close();
-            return;
-        }
-        var strongness = 1;
-        
-        if(doc.height > 1024 || doc.width > 1024) {
-            strongness = 4;
-        }
-
-        _effects.ApplyLightOilPaint(strongness);
-        doc.save();
-        doc.close();
-    }
-
-
-    // --------------------------------------------------------------------------------
-    // Apply effect on Tree textures
-    // ------------------------------
-    function EditTree(fileObj)
-    {
-        var doc = open(fileObj);
-        // On skip les fichiers trop petits.
-        if (doc.width < 32 && doc.height < 32) 
-        {
-            doc.close();
-            return;
-        }
-        var strongness = 1;
-        
-        if(String.Contains(fileObj.name, "bark") && (doc.height >= 2048 || doc.width >= 2048)) {
-            strongness = 4;
-        }
-
-        _effects.ApplyLightOilPaint(strongness);
-        doc.save();
-        doc.close();
-    }
-
-
-    // --------------------------------------------------------------------------------
-    // Apply effect on rock textures
-    // ------------------------------
-    function EditRock(fileObj)
-    {
-        var doc = open(fileObj);    
-        // On skip les fichiers trop petits.
-        if (doc.width < 32 && doc.height < 32) 
-        {
-            doc.close();
-            return;
-        }  
-
-        ResizeIfBiggerThan(doc, 2048);
-
-        if((doc.width >= 1024 && doc.height > 256) ||
-           (doc.height >= 1024 && doc.width > 256))
-        {
-            _effects.ApplyStrongOilPaint(4);
-        }
-        else
-        {
-            _effects.ApplyLightOilPaint(4);
-        }
-
-        doc.save();
-        doc.close();
-    }
-
-    // --------------------------------------------------------------------------------
-    // Resize the file "doc" if it size is bigger than the maxSize value.
-    // ------------------------------
-    function ResizeIfBiggerThan(doc, maxSize)
-    {
-        app.preferences.rulerUnits = Units.PIXELS; // Set the ruler units to PIXELS
-        app.preferences.typeUnits = TypeUnits.POINTS;   // Set Type units to POINTS
-
-        if (doc.width >= doc.height)
-        {
-            if(doc.width > maxSize) {
-                doc.resizeImage(
-                    UnitValue(maxSize, 'px'),
-                    null,
-                    null,
-                    ResampleMethod.BICUBIC);
+                editorObj.ApplyEffect(doc);
+                _effects.ApplyDefaultOffset();
+                _actions.PasteSelection();
+                _actions.SelectAllLayers();
+                _actions.AlignSelectedLayers();
+                _actions.MergeLayers();
+                _effects.RevertDefaultOffset();
+                
+                editorObj.PostWork(doc);
+                doc.save();
             }
+            
+            doc.close();
         }
-        else
+    }
+
+    function EditNormals(obj, editorObj)
+    {
+        var i = 0;
+        for(i = 0; i < obj.length; i++)
         {
-            if(doc.height > maxSize) {
-                doc.resizeImage(
-                    null,
-                    UnitValue(maxSize, 'px'),
-                    null,
-                    ResampleMethod.BICUBIC);
+            var doc = open(obj[i]);
+            // If file is too small, we skip
+            if (doc.width >= 32 || doc.height >= 32) 
+            {
+                editorObj.PreWork(doc);
+
+                //_effects.ApplyDefaultOffset();
+                //editorObj.ApplyEffect(doc);
+                //_actions.SelectImageButContour(10);
+                //_actions.CopySelection();
+
+                //_actions.RevertImageToDefault();
+
+                editorObj.ApplyEffect(doc);
+                //_effects.ApplyDefaultOffset();
+                //_actions.PasteSelection();
+                //_actions.SelectAllLayers();
+                //_actions.AlignSelectedLayers();
+                //_actions.MergeLayers();
+                //_effects.RevertDefaultOffset();
+                
+                editorObj.PostWork(doc);
+                doc.save();
             }
+            
+            doc.close();
         }
     }
 }

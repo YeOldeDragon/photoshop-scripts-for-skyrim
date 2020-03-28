@@ -24,11 +24,31 @@ SOFTWARE.
 
 
 #target photoshop
-#include "batch_skyrim_textures_editor.jsx"
+#include "effects.jsx"
+#include "actions.jsx"
 
 
-// Get the folder to process
-var folderUri = Folder.selectDialog( "Select Skyrim Textures folder to edit." );
+var basePath = "C:/Users/marcel/Desktop/textures/";
+var filePath = "C:/Users/marcel/Desktop/textures/architecture/whiterun/wrbasedirt01.dds";
+var treePath = filePath.replace(basePath, "");
+alert(treePath);
 
-var executer = new BatchSkyrimTexturesEditor();
-executer.ApplyEffectsOnFiles(folderUri, "D:/Sandbox/photoshop-scripts-for-skyrim/data/");
+// var _effects = new Effects();
+// var _actions = new Actions();
+
+
+
+// _effects.ApplyDefaultOffset();
+// _effects.ApplyStrongOilPaint(1);
+// _actions.SelectImageButContour(10);
+// _actions.CopySelection();
+
+// _actions.RevertImageToDefault();
+
+// _effects.ApplyStrongOilPaint(1);
+// _effects.ApplyDefaultOffset();
+// _actions.PasteSelection();
+// _actions.SelectAllLayers();
+// _actions.AlignSelectedLayers();
+// _actions.MergeLayers();
+// _effects.RevertDefaultOffset();

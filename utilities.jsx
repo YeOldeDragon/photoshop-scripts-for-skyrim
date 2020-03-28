@@ -53,4 +53,3 @@ String.Contains = function (obj, value)
 {
     return obj.indexOf(value) >= 0;
 }
-
