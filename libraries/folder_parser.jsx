@@ -1,4 +1,9 @@
 ﻿/*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/*
 --------------------------------------------------------------------------------
 MIT License
 
@@ -40,6 +45,8 @@ function FolderParser()
     var folders = new Array();
     var skippedFolders = ["cubemaps", "effects", "shadertests", "sky", "terrain", "interface", "test", 
                           "water", "character" ];
+    var _basePath;
+    var _destPath;
 
     var _actorFiles = Array();
     var _actorHDFiles = Array();
@@ -87,8 +94,11 @@ function FolderParser()
     // --------------------------------------------------------------------------------
     // Main function to parse a Skyrim textures folder.
     // --------------------------
-    this.Parse = function(folderPath, dataPath)
+    this.Parse = function(folderPath, dataPath, destPath)
     {
+        _basePath = folderPath;
+        _destPath = destPath;
+
         // Load all premade texture lists
         LoadPremadeLists(dataPath);
 
@@ -101,6 +111,7 @@ function FolderParser()
 
     function LoadPremadeLists(dataPath)
     {
+        dataPath = "../data/";
         LoadNames(_bannerList, dataPath + "banners.txt");
         LoadNames(_lodList, dataPath + "LOD.txt");
         LoadNames(_metalList, dataPath + "metal.txt");
@@ -130,7 +141,11 @@ function FolderParser()
     {
         var folderName = Folder.decode(folderObj.name).toLowerCase();
 
-        if (Array.Contains(skippedFolders, folderName)) return;
+        if (Array.Contains(skippedFolders, folderName))
+        { 
+            copySkippedFiles(folderObj);
+            return;
+        }
 
         folders.push(folderObj);
 
@@ -139,6 +154,34 @@ function FolderParser()
             if (fileList[i] instanceof Folder)
             {
                 createFolderList(fileList[i]);
+            }
+        }
+    }
+
+    
+    // --------------------------------------------------------------------------------
+    // Scan all subfolders to copy all files content to destination folder.
+    // --------------------------
+    function copySkippedFiles(folderObj)
+    {
+        var fileList = folderObj.getFiles();
+        for(var i=0; i<fileList.length; i++) {
+            if (fileList[i] instanceof Folder)
+            {
+                copySkippedFiles(fileList[i]);
+            }
+            else
+            {
+                var treePath = fileList[i].path.replace(_basePath, ""); 
+                var folderObj = new Folder(_destPath + treePath);
+                if (!folderObj.exist)
+                {
+                    // Create folder if it doesn't exist.
+                    folderObj.create();
+                }
+
+                // Copy file in destination folder
+                fileList[i].copy(_destPath + treePath + "/" + fileList[i].name);
             }
         }
     }

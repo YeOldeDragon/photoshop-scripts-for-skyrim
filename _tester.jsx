@@ -1,4 +1,9 @@
-﻿/* --------------------------------------------------------------------------------
+﻿/*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/* --------------------------------------------------------------------------------
 MIT License
 
 Copyright (c) 2020 YeOldeDragon
@@ -27,11 +32,29 @@ SOFTWARE.
 #include "effects.jsx"
 #include "actions.jsx"
 
-
-var basePath = "C:/Users/marcel/Desktop/textures/";
+//var doc = app.activeDocument;
+var _basePath = "~/Desktop/textures/";
+var _destPath = "C:/Users/marcel/Desktop/result/";
 var filePath = "C:/Users/marcel/Desktop/textures/architecture/whiterun/wrbasedirt01.dds";
-var treePath = filePath.replace(basePath, "");
-alert(treePath);
+//var treePath = filePath.replace(basePath, "");
+var tmp =  new File(filePath);
+var treePath = tmp.path.replace(_basePath, ""); 
+
+var folderObj = new Folder(_destPath + treePath);
+if (!folderObj.exist)
+{
+    folderObj.create();
+}
+alert(folderObj);
+
+alert(tmp.copy(_destPath + treePath + "/" + tmp.name));
+open(new File(_destPath + treePath + "/" + tmp.name));
+//alert(_destPath + treePath);
+
+
+//doc.saveAs(File(_destPath + treePath + "/" + doc.name), null, true);
+
+
 
 // var _effects = new Effects();
 // var _actions = new Actions();

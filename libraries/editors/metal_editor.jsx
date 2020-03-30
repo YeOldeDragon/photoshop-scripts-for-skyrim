@@ -1,4 +1,9 @@
 /*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/*
 --------------------------------------------------------------------------------
 MIT License
 
@@ -25,28 +30,29 @@ SOFTWARE.
 #target photoshop
 
 
-function ActorEditor(effectsObj, actionsObj)
+function MetalEditor(effectsObj, actionsObj, maxSize)
 {
+    var _maxSize = maxSize;
     var _effects = effectsObj;
     var _actions = actionsObj;
 
     // Actions we want to do before applying effects (ex.: resize)
     this.PreWork = function(doc)
     {
-
+        _actions.ResizeIfBiggerThan(doc, 2048);
     }
 
 
     // Actions / effects we want to apply to this image type
     this.ApplyEffect = function(doc)
     {
-        _effects.ApplyLightOilPaint(1);
+        _effects.ApplyLightOilPaint(2);
     }
 
     
     // Actions we want to do before applying effects (ex.: resize)
     this.PostWork = function(doc)
     {
-        _actions.ResizeIfBiggerThan(doc, 1024);
+        _actions.ResizeIfBiggerThan(doc, _maxSize);
     }
 }

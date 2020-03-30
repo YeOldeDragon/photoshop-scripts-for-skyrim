@@ -1,5 +1,9 @@
-/*
---------------------------------------------------------------------------------
+﻿/*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/* --------------------------------------------------------------------------------
 MIT License
 
 Copyright (c) 2020 YeOldeDragon
@@ -22,39 +26,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -------------------------------------------------------------------------------- */
-#target photoshop
 
-
-function RockEditor(effectsObj, actionsObj)
+// ********************************************************
+// Check if the array contains a specific value.
+Array.Contains = function(obj, value)
 {
-    var _effects = effectsObj;
-    var _actions = actionsObj;
-
-    // Actions we want to do before applying effects (ex.: resize)
-    this.PreWork = function(doc)
+    var i = 0;
+    for(i = 0; i < obj.length; i++)
     {
-        _actions.ResizeIfBiggerThan(doc, 2048);
+        if (obj[i] == value) return true;
     }
+    return false;
+}
 
 
-    // Actions / effects we want to apply to this image type
-    this.ApplyEffect = function(doc)
+// ********************************************************
+// Execute a callback function for every item in the array.
+Array.ForEach = function(obj, callback)
+{
+    var i = 0;
+    for(i = 0; i < obj.length; i++)
     {
-        if((doc.width >= 1024 && doc.height > 256) ||
-           (doc.height >= 1024 && doc.width > 256))
-        {
-            _effects.ApplyStrongOilPaint(4);
-        }
-        else
-        {
-            _effects.ApplyLightOilPaint(4);
-        }
+        callback(obj[i]);
     }
+}
 
-    
-    // Actions we want to do before applying effects (ex.: resize)
-    this.PostWork = function(doc)
-    {
-        _actions.ResizeIfBiggerThan(doc, 1024);
-    }
+
+// ********************************************************
+// Check if a string contains a specific substring.
+String.Contains = function (obj, value)
+{
+    return obj.indexOf(value) >= 0;
 }

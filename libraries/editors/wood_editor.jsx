@@ -1,5 +1,9 @@
 /*
---------------------------------------------------------------------------------
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/* --------------------------------------------------------------------------------
 MIT License
 
 Copyright (c) 2020 YeOldeDragon
@@ -25,14 +29,16 @@ SOFTWARE.
 #target photoshop
 
 
-function DefaultEditor(effectsObj, actionsObj)
+function WoodEditor(effectsObj, actionsObj, maxSize)
 {
+    var _maxSize = maxSize;
     var _effects = effectsObj;
     var _actions = actionsObj;
 
     // Actions we want to do before applying effects (ex.: resize)
     this.PreWork = function(doc)
     {
+        _actions.ResizeIfBiggerThan(doc, 2048);
     }
 
 
@@ -46,6 +52,6 @@ function DefaultEditor(effectsObj, actionsObj)
     // Actions we want to do before applying effects (ex.: resize)
     this.PostWork = function(doc)
     {
-        _actions.ResizeIfBiggerThan(doc, 1024);
+        _actions.ResizeIfBiggerThan(doc, _maxSize);
     }
 }

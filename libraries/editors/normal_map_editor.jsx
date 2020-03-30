@@ -1,4 +1,9 @@
 /*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/*
 --------------------------------------------------------------------------------
 MIT License
 
@@ -25,8 +30,9 @@ SOFTWARE.
 #target photoshop
 
 
-function PlantEditor(effectsObj, actionsObj)
+function NormalMapEditor(effectsObj, actionsObj, maxSize)
 {
+    var _maxSize = maxSize;
     var _effects = effectsObj;
     var _actions = actionsObj;
 
@@ -46,6 +52,6 @@ function PlantEditor(effectsObj, actionsObj)
     // Actions we want to do before applying effects (ex.: resize)
     this.PostWork = function(doc)
     {
-        _actions.ResizeIfBiggerThan(doc, 1024);
+        _actions.ResizeIfBiggerThan(doc, _maxSize);
     }
 }

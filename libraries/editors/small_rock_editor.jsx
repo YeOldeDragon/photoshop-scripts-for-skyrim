@@ -1,4 +1,9 @@
 /*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/*
 --------------------------------------------------------------------------------
 MIT License
 
@@ -25,8 +30,9 @@ SOFTWARE.
 #target photoshop
 
 
-function TreeEditor(effectsObj, actionsObj)
+function SmallRockEditor(effectsObj, actionsObj, maxSize)
 {
+    var _maxSize = maxSize;
     var _effects = effectsObj;
     var _actions = actionsObj;
 
@@ -40,17 +46,13 @@ function TreeEditor(effectsObj, actionsObj)
     // Actions / effects we want to apply to this image type
     this.ApplyEffect = function(doc)
     {
-        var strongness = 1;
-        if(String.Contains(doc.name, "bark") && (doc.height >= 2048 || doc.width >= 2048)) {
-            strongness = 4;
-        }
-
-        _effects.ApplyLightOilPaint(strongness);
+        _effects.ApplyLightOilPaint(2);
     }
 
     
     // Actions we want to do before applying effects (ex.: resize)
     this.PostWork = function(doc)
     {
+        _actions.ResizeIfBiggerThan(doc, _maxSize);
     }
 }

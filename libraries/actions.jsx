@@ -1,4 +1,9 @@
-﻿/* --------------------------------------------------------------------------------
+﻿/*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/* --------------------------------------------------------------------------------
 MIT License
 
 Copyright (c) 2020 YeOldeDragon
@@ -26,7 +31,7 @@ SOFTWARE.
 
 
 // --------------------------------------------------------------------------------
-// Effects class.
+// Actions class.
 // --------------------------------------------------------------------------------
 // This class contains methods to apply photoshop action on the current active 
 // document.
@@ -146,26 +151,18 @@ function Actions()
         executeAction( idAlgn, desc323, DialogModes.NO );
     }
 
-    this.MergeLayers = function()
+    this.MergeDown = function()
     {
         var idMrgtwo = charIDToTypeID( "Mrg2" );
-        var desc477 = new ActionDescriptor();
-        executeAction( idMrgtwo, desc477, DialogModes.NO );
+        var desc48 = new ActionDescriptor();
+        executeAction( idMrgtwo, desc48, DialogModes.NO );
     }
 
     this.RevertImageToDefault = function()
     {
-        var doc = app.activeDocument;
-        
         // =======================================================
-        var idslct = charIDToTypeID( "slct" );
-        var desc379 = new ActionDescriptor();
-        var idnull = charIDToTypeID( "null" );
-        var ref119 = new ActionReference();
-        var idSnpS = charIDToTypeID( "SnpS" );
-        ref119.putName( idSnpS, doc.name );
-        desc379.putReference( idnull, ref119 );
-        executeAction( idslct, desc379, DialogModes.NO );
+        var idRvrt = charIDToTypeID( "Rvrt" );
+        executeAction( idRvrt, undefined, DialogModes.NO );
     }
 
     
@@ -193,6 +190,30 @@ function Actions()
                     null,
                     ResampleMethod.BICUBIC);
             }
+        }
+    }
+
+
+    this.ResizeByPercent = function(doc, percent)
+    {
+        app.preferences.rulerUnits = Units.PIXELS; // Set the ruler units to PIXELS
+        app.preferences.typeUnits = TypeUnits.POINTS;   // Set Type units to POINTS
+    
+        if (doc.width >= doc.height)
+        {
+            doc.resizeImage(
+                UnitValue(doc.width * percent, 'px'),
+                null,
+                null,
+                ResampleMethod.BICUBIC);
+        }
+        else
+        {
+            doc.resizeImage(
+                null,
+                UnitValue(doc.height * percent, 'px'),
+                null,
+                ResampleMethod.BICUBIC);
         }
     }
 }

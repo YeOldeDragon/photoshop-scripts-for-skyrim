@@ -1,4 +1,9 @@
-﻿/* --------------------------------------------------------------------------------
+﻿/*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/* --------------------------------------------------------------------------------
 MIT License
 
 Copyright (c) 2020 YeOldeDragon
@@ -88,17 +93,16 @@ function Effects()
 
     function ApplyOffset(offsetHrzn, offsetVrtc)
     {
-        // =======================================================
         var idOfst = charIDToTypeID( "Ofst" );
-        var desc118 = new ActionDescriptor();
+        var desc76 = new ActionDescriptor();
         var idHrzn = charIDToTypeID( "Hrzn" );
-        desc118.putInteger( idHrzn, offsetHrzn );
+        desc76.putInteger( idHrzn, offsetHrzn );
         var idVrtc = charIDToTypeID( "Vrtc" );
-        desc118.putInteger( idVrtc, offsetVrtc );
+        desc76.putInteger( idVrtc, offsetVrtc );
         var idFl = charIDToTypeID( "Fl  " );
         var idFlMd = charIDToTypeID( "FlMd" );
         var idWrp = charIDToTypeID( "Wrp " );
-        desc118.putEnumerated( idFl, idFlMd, idWrp );
-        executeAction( idOfst, desc118, DialogModes.NO );
+        desc76.putEnumerated( idFl, idFlMd, idWrp );
+        executeAction( idOfst, desc76, DialogModes.NO );
     }
 }

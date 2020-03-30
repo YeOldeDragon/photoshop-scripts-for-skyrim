@@ -34,8 +34,8 @@ var folders = new Array();
 var skippedFolders = ["cubemaps", "effects", "shadertests", "sky", "terrain", "interface", "test", 
                         "water", "character" ];
 
-var logFile = new File("C:\\Users\\marcel\\Desktop\\landscape_stone.txt");
-var logFile_n = new File("C:\\Users\\marcel\\Desktop\\landscape_stone_n.txt");
+var logFile = new File("~\\Desktop\\landscape_stone.txt");
+var logFile_n = new File("~\\Desktop\\landscape_stone_n.txt");
 logFile.open("w");
 logFile_n.open("w");
 parseFolder(Folder("C:\\Users\\marcel\\Desktop\\parsingFiles\\stone"));

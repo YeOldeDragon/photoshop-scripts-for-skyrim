@@ -1,4 +1,9 @@
 /*
+<javascriptresource>
+<enableinfo>false</enableinfo>
+</javascriptresource>
+*/
+/*
 --------------------------------------------------------------------------------
 MIT License
 
